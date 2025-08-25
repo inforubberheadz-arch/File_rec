@@ -1,5 +1,4 @@
 const express = require('express');
-const cors = require('cors');
 const multer = require('multer');
 const FormData = require('form-data');
 const fetch = require('node-fetch');
@@ -8,31 +7,26 @@ const dotenv = require('dotenv');
 dotenv.config();
 
 const app = express();
-
-// CONFIGURA CORS CORRETTAMENTE
-const corsOptions = {
-  origin: ['https://chimerical-douhua-121b2a.netlify.app', 'http://localhost:3000'],
-  methods: ['GET', 'POST', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
-  credentials: true
-};
-
-app.use(cors(corsOptions));
-app.options('*', cors(corsOptions)); // Abilita preflight requests
-
 const upload = multer();
+
+// CORS MANUALE - MOLTO PERMISSIVO (per testing)
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
+  
+  if (req.method === 'OPTIONS') {
+    return res.sendStatus(200);
+  }
+  
+  next();
+});
 
 app.post('/upload', upload.single('file'), async (req, res) => {
   try {
-    // Aggiungi headers CORS anche nella response
-    res.header('Access-Control-Allow-Origin', 'https://chimerical-douhua-121b2a.netlify.app');
-    res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
-    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-
     if (!req.file) return res.status(400).json({ error: 'Nessun file ricevuto' });
 
     const formData = new FormData();
-    
     formData.append('file', req.file.buffer, {
       filename: req.file.originalname,
       contentType: req.file.mimetype
