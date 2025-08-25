@@ -1,9 +1,10 @@
-import express from 'express';
-import cors from 'cors';
-import multer from 'multer';
-import FormData from 'form-data';
-import fetch from 'node-fetch';
-import dotenv from 'dotenv';
+const express = require('express');
+const cors = require('cors');
+const multer = require('multer');
+const FormData = require('form-data');
+const fetch = require('node-fetch');
+require('dotenv').config();
+
 
 dotenv.config();
 
