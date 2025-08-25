@@ -8,22 +8,36 @@ const dotenv = require('dotenv');
 dotenv.config();
 
 const app = express();
+
+// CONFIGURA CORS CORRETTAMENTE
+const corsOptions = {
+  origin: ['https://chimerical-douhua-121b2a.netlify.app', 'http://localhost:3000'],
+  methods: ['GET', 'POST', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true
+};
+
+app.use(cors(corsOptions));
+app.options('*', cors(corsOptions)); // Abilita preflight requests
+
 const upload = multer();
-app.use(cors());
 
 app.post('/upload', upload.single('file'), async (req, res) => {
   try {
+    // Aggiungi headers CORS anche nella response
+    res.header('Access-Control-Allow-Origin', 'https://chimerical-douhua-121b2a.netlify.app');
+    res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+
     if (!req.file) return res.status(400).json({ error: 'Nessun file ricevuto' });
 
     const formData = new FormData();
     
-    // Aggiungi il file correttamente
     formData.append('file', req.file.buffer, {
       filename: req.file.originalname,
       contentType: req.file.mimetype
     });
 
-    // Aggiungi metadata
     const metadata = JSON.stringify({
       name: req.file.originalname,
     });
