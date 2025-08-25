@@ -1,9 +1,9 @@
-import express from 'express';
-import cors from 'cors';
-import multer from 'multer';
-import FormData from 'form-data';
-import fetch from 'node-fetch';
-import dotenv from 'dotenv';
+const express = require('express');
+const cors = require('cors');
+const multer = require('multer');
+const FormData = require('form-data');
+const fetch = require('node-fetch');
+const dotenv = require('dotenv');
 
 dotenv.config();
 
@@ -17,13 +17,13 @@ app.post('/upload', upload.single('file'), async (req, res) => {
 
     const formData = new FormData();
     
-    // MODIFICA IMPORTANTE: Aggiungi il file correttamente
+    // Aggiungi il file correttamente
     formData.append('file', req.file.buffer, {
       filename: req.file.originalname,
       contentType: req.file.mimetype
     });
 
-    // Aggiungi metadata opzionale
+    // Aggiungi metadata
     const metadata = JSON.stringify({
       name: req.file.originalname,
     });
