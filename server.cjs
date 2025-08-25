@@ -1,13 +1,10 @@
 require('dotenv').config();
+
 const express = require('express');
 const cors = require('cors');
 const multer = require('multer');
 const FormData = require('form-data');
 const fetch = require('node-fetch');
-
-
-
-dotenv.config();
 
 const app = express();
 const upload = multer();
