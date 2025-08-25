@@ -41,7 +41,7 @@ app.post('/upload', upload.single('file'), async (req, res) => {
     const response = await fetch('https://api.pinata.cloud/pinning/pinFileToIPFS', {
       method: 'POST',
       headers: {
-        'pinata_api_key': process.env.PINATA_API_KEY,
+        'pinata_api_key': process.env.PINATA_API_KEY2,
         'pinata_secret_api_key': process.env.PINATA_SECRET_API_KEY,
         ...formData.getHeaders()
       },
