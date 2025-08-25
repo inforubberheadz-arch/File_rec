@@ -9,7 +9,7 @@ dotenv.config();
 const app = express();
 const upload = multer();
 
-// CORS MANUALE - MOLTO PERMISSIVO (per testing)
+// CORS MANUALE
 app.use((req, res, next) => {
   res.header('Access-Control-Allow-Origin', '*');
   res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
@@ -37,10 +37,12 @@ app.post('/upload', upload.single('file'), async (req, res) => {
     });
     formData.append('pinataMetadata', metadata);
 
+    
     const response = await fetch('https://api.pinata.cloud/pinning/pinFileToIPFS', {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${process.env.PINATA_JWT}`,
+        'pinata_api_key': process.env.PINATA_API_KEY,
+        'pinata_secret_api_key': process.env.PINATA_SECRET_API_KEY,
         ...formData.getHeaders()
       },
       body: formData
@@ -49,6 +51,7 @@ app.post('/upload', upload.single('file'), async (req, res) => {
     const data = await response.json();
     
     if (!response.ok) {
+      console.error('Errore Pinata:', data);
       return res.status(response.status).json({ 
         error: 'Errore Pinata',
         details: data 
